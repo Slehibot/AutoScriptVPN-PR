@@ -109,6 +109,7 @@ function InstUpdates(){
  apt-get install apt-transport-https -y
  apt-get install lsb-release -y
  apt-get install squid3 -y
+ apt-get install squid -y
  
  # Installing all required packages to install Webmin
  apt-get install perl -y
@@ -316,14 +317,12 @@ accept = Stunnel_Port2
 connect = 127.0.0.1:openssh_port_c
 MyStunnelC
 
- # setting stunnel ports
+# setting stunnel ports
  sed -i "s|Stunnel_Port1|$Stunnel_Port1|g" /etc/stunnel/stunnel.conf
  sed -i "s|dropbear_port_c|$(netstat -tlnp | grep -i dropbear | awk '{print $4}' | cut -d: -f2 | xargs | awk '{print $2}' | head -n1)|g" /etc/stunnel/stunnel.conf
  sed -i "s|Stunnel_Port2|$Stunnel_Port2|g" /etc/stunnel/stunnel.conf
  sed -i "s|openssh_port_c|$(netstat -tlnp | grep -i ssh | awk '{print $4}' | cut -d: -f2 | xargs | awk '{print $2}' | head -n1)|g" /etc/stunnel/stunnel.conf
-
- # Restarting stunnel service
- systemctl restart $StunnelDir
+ sed -i 's/ENABLED=0/ENABLED=1/g' /etc/default/stunnel4
 
 }
 
